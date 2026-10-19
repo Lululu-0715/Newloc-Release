@@ -1,13 +1,13 @@
 {
   "version": "1.6.6",
-  "build": 58,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b58/update/Newloc-1.6.6-b58.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b58/update/NewlocUltimate-1.6.6-b58.bin",
-  "size": 4042770,
-  "sha256": "d6956d9d69a71a4afd929303b7f3c9632a71409c4c7940c850e0e5aab9508fbf",
-  "sizeUltimate": 4156726,
-  "sha256Ultimate": "20ef3f2d3131c91e046a137727b67c9735c2aa14c62e031a1aca18ebcd03584f",
+  "build": 60,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b60/update/Newloc-1.6.6-b60.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b60/update/NewlocUltimate-1.6.6-b60.bin",
+  "size": 4077866,
+  "sha256": "acf2a1d250194f57802adf8d4e3a5cef4af0305e5e0b478ad1b0a0de7bd3f09e",
+  "sizeUltimate": 4194738,
+  "sha256Ultimate": "dc818d59dff2097af63b895a6f1c49c99c05fe6a9a13e4318792da9682fcef3c",
   "date": "2026-10-20",
-  "notes": "- 源码仓转入私有，更新源/第三方模块脚本迁移至独立公开仓 Newloc-Release\n- 卡密系统上线：六档时长卡（3天/周/月/季/半年/年），云端激活，3 天断网宽限\n- 会员卡片规格修复：与其他卡片同宽同边距，右上角显示 App 图标\n- 发卡平台新增卡密类型筛选",
-  "notesEn": "- Source repo is now private; update feed and third-party module scripts moved to the public Newloc-Release repo\n- License key system: six duration tiers with cloud activation and 3-day offline grace\n- Membership card layout fixed to match other cards; shows the real app icon\n- Card-type filter added to the admin app"
+  "notes": "- 流光背景：修掉背景里的方形色块和直线拼缝，色团边缘恢复柔和渐变\n- 更新检查：某个更新源连不上时不再导致整次检查失败，国内网络下也能正常发现新版本\n- 深色模式下切换外观，背景不再出现空白",
+  "notesEn": "- Fluid background: fixed the square patches and straight seams; blob edges fade smoothly again\n- Update check: one unreachable feed no longer breaks the whole check, so new versions show up on restricted networks\n- Dark mode: switching appearance no longer leaves the background blank"
 }
