@@ -1,0 +1,13 @@
+{
+  "version": "1.6.6",
+  "build": 58,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b58/update/Newloc-1.6.6-b58.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b58/update/NewlocUltimate-1.6.6-b58.bin",
+  "size": 4042770,
+  "sha256": "d6956d9d69a71a4afd929303b7f3c9632a71409c4c7940c850e0e5aab9508fbf",
+  "sizeUltimate": 4156726,
+  "sha256Ultimate": "20ef3f2d3131c91e046a137727b67c9735c2aa14c62e031a1aca18ebcd03584f",
+  "date": "2026-10-20",
+  "notes": "- 源码仓转入私有，更新源/第三方模块脚本迁移至独立公开仓 Newloc-Release\n- 卡密系统上线：六档时长卡（3天/周/月/季/半年/年），云端激活，3 天断网宽限\n- 会员卡片规格修复：与其他卡片同宽同边距，右上角显示 App 图标\n- 发卡平台新增卡密类型筛选",
+  "notesEn": "- Source repo is now private; update feed and third-party module scripts moved to the public Newloc-Release repo\n- License key system: six duration tiers with cloud activation and 3-day offline grace\n- Membership card layout fixed to match other cards; shows the real app icon\n- Card-type filter added to the admin app"
+}

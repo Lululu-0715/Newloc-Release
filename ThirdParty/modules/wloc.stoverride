@@ -1,0 +1,54 @@
+name: "Newloc WLOC (Stash)"
+desc: "配合「Newloc」应用改写 Apple 定位服务响应。本文件适用于 Stash。"
+author: "Newloc"
+
+# ─────────────────────────────────────────────────────────────
+#  本文件仅供 Stash 导入。
+#  格式特征：YAML override（http.mitm / http.script）。
+#
+#  其他客户端请改用对应文件（功能完全一致，只是格式不同）：
+#    Shadowrocket    → wloc.module
+#    Surge / Egern   → wloc.sgmodule
+#    Quantumult X    → wloc.conf
+#    Loon            → wloc.lpx
+#  对照表见同目录的 README.md
+#
+#  导入后请开启本模块，并确认 MITM 已启用。切勿给下方主机名添加
+#  DIRECT 规则——那会让流量绕过代理，规则永远不会触发。
+# ─────────────────────────────────────────────────────────────
+
+http:
+  mitm:
+    - gs-loc.apple.com
+    - gs-loc-cn.apple.com
+    - gsp-ssl.ls.apple.com
+    - gsp10-ssl.ls.apple.com
+    - gsp10-ssl.apple.com
+    - gsp64-ssl.ls.apple.com
+    - gspe1-ssl.ls.apple.com
+    - gspe19-ssl.ls.apple.com
+    - gspe19-2-ssl.ls.apple.com
+    - gspe35-ssl.ls.apple.com
+    - gspe79-ssl.ls.apple.com
+    - gspe85-ssl.ls.apple.com
+    - bluedot.is.autonavi.com
+    - bluedot.is.autonavi.com.gds.alibabadns.com
+  script:
+    # binary-body-mode 不能省：定位响应是 protobuf 二进制，不开这个开关时
+    # 客户端会先按 UTF-8 解码再交给脚本，高位字节被替换成 U+FFFD，
+    # 脚本还原出来的字节流已经坏了——表现就是「模块在跑、坐标也写进去了，
+    # 定位纹丝不动」。
+    - name: wloc-rewrite
+      match: ^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp(?:-|\d+-|e\d+(?:-\d+)?-)ssl\.(?:ls\.)?apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc
+      type: response
+      require-body: true
+      binary-body-mode: true
+      max-size: 0
+      timeout: 30
+      script: https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc@main/ThirdParty/ProxyScripts/wloc.js
+    - name: wloc-settings
+      match: ^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save
+      type: request
+      require-body: false
+      timeout: 10
+      script: https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc@main/ThirdParty/ProxyScripts/wloc-settings.js
