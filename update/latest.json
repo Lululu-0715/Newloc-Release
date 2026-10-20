@@ -1,13 +1,13 @@
 {
-  "version": "1.6.6",
-  "build": 61,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b61/update/Newloc-1.6.6-b61.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.6-b61/update/NewlocUltimate-1.6.6-b61.bin",
-  "size": 4083578,
-  "sha256": "7defba700a362cc728b1fe24aec2d7ec9989ec15c011c55d4e693de5f116b959",
-  "sizeUltimate": 4198819,
-  "sha256Ultimate": "a3259ed37497113930986024454fce88cf04ad4c68cf256ef2de7678024bb5a7",
+  "version": "1.6.7",
+  "build": 62,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b62/update/Newloc-1.6.7-b62.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b62/update/NewlocUltimate-1.6.7-b62.bin",
+  "size": 4083047,
+  "sha256": "28686f9e92ff260d3e25ca1d6ec7a0817eae714a4ca75daec0f840f65758b8a7",
+  "sizeUltimate": 4195933,
+  "sha256Ultimate": "d301e18c7ce28529fc403f8be3fd2404a251adfbe8915282d836f04185f3aecb",
   "date": "2026-10-20",
-  "notes": "流光背景：卡片改为毛玻璃（与 Yore 原版一致，滑块可调）；背景色彩浓度对齐原版，中间发青的脏色消失；五个色团改为各走各的，整屏同时抽动的脉冲感消除",
-  "notesEn": "Fluid background: cards use frosted glass now (same as Yore, slider-adjustable); color saturation matched to the original; blobs animate with offset phases so the screen no longer pulses as a whole"
+  "notes": "流光背景：卡片改为半透白叠层（iOS 26 下 Material 会渲染成液态玻璃的灰膜，卡片看起来是一块实心灰板）；背景色团饱和度按原版截图重校；默认卡片透明度回到 70%",
+  "notesEn": "Fluid background: cards now use a translucent white layer instead of Material (on iOS 26 Material renders as Liquid Glass, making cards look like solid grey slabs); blob saturation recalibrated against the original; default card transparency back to 70%"
 }
