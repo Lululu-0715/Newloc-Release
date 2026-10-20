@@ -1,13 +1,13 @@
 {
-  "version": "1.6.7",
-  "build": 65,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b65/update/Newloc-1.6.7-b65.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b65/update/NewlocUltimate-1.6.7-b65.bin",
-  "size": 4084731,
-  "sha256": "22afb5306130def9127e12598163a3054e11d57b8fc9af225a6a69b2e78475b4",
-  "sizeUltimate": 4201197,
-  "sha256Ultimate": "8f86a8e2a37313f7cc8d8a2b12730db101b26ea06596af182c8a3e8e69daf083",
+  "version": "1.6.8",
+  "build": 66,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b66/update/Newloc-1.6.8-b66.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b66/update/NewlocUltimate-1.6.8-b66.bin",
+  "size": 4101454,
+  "sha256": "fc3582b6f88fa6787e8e15d374c546fcbde64acf615df4968aa2770517bbd47d",
+  "sizeUltimate": 4215948,
+  "sha256Ultimate": "e870bd52a0b0fc9afa75f5dcd97adfdae5f71c975ba66adf1e51a0ac80297df5",
   "date": "2026-10-20",
-  "notes": "新增 GitHub Pages 清单镜像，修掉「检查更新偶尔查不到新版」——jsDelivr 的分支缓存发布后十几分钟仍返回旧清单，GitHub API 又按 IP 限流；分享方式去掉微信 zip；新增「用其他应用打开」；主界面流光提速到约 6 秒一轮",
-  "notesEn": "Added a GitHub Pages manifest mirror, fixing occasional stale update checks (jsDelivr branch cache lags ~15 min+, GitHub API is IP rate-limited). Removed the WeChat .zip share option; added \"Open in Another App\"; fluid background sped up to ~6s per cycle."
+  "notes": "流光背景「流动」档色团整体加深；柔光档修掉浓度滑块后三分之一拖不动的死区；设置页会员卡改版：新增个人中心（设备码可复制、输入卡密、解绑带二次确认），删掉与主界面重复的虚拟定位状态卡",
+  "notesEn": "Deepened the fluid-background blobs; fixed the dead zone where the glow-intensity slider did nothing past ~2/3; reworked the membership card: new Personal Center (copyable device code, card activation, uninstall with confirmation) and removed the duplicate spoof-status card."
 }
