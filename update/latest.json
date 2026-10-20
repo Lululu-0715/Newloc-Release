@@ -1,13 +1,13 @@
 {
   "version": "1.6.7",
-  "build": 64,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b64/update/Newloc-1.6.7-b64.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b64/update/NewlocUltimate-1.6.7-b64.bin",
-  "size": 4084759,
-  "sha256": "fd57aa3f3200fa384bc0a9411c3168943c0029fdda982fd4fef2c90908c02432",
-  "sizeUltimate": 4201803,
-  "sha256Ultimate": "384e1ab3cf9ce8bedd2658e24960ef415267f5478e706a13b0a868f8359fd740",
+  "build": 65,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b65/update/Newloc-1.6.7-b65.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b65/update/NewlocUltimate-1.6.7-b65.bin",
+  "size": 4084731,
+  "sha256": "22afb5306130def9127e12598163a3054e11d57b8fc9af225a6a69b2e78475b4",
+  "sizeUltimate": 4201197,
+  "sha256Ultimate": "8f86a8e2a37313f7cc8d8a2b12730db101b26ea06596af182c8a3e8e69daf083",
   "date": "2026-10-20",
-  "notes": "分享方式去掉「微信传文件（.zip）」（这条路走不通，还每版白占 4MB）；分享面板新增「用其他应用打开」，签名工具认这条通路；「分享 IPA」额外注册 public.data / public.item，修掉部分签名工具列不出本应用；更新源加两条 jsDelivr 备路，国内检查更新更稳；主界面流光背景速度提到约 6 秒一轮",
-  "notesEn": "Removed the WeChat .zip share option (it never worked and cost 4MB per build). Added \"Open in Another App\" (document-open path, more reliable for signing tools). \"Share IPA\" now also registers public.data / public.item. Two extra jsDelivr mirrors for update checks. Home-screen fluid background sped up to ~6s per cycle."
+  "notes": "新增 GitHub Pages 清单镜像，修掉「检查更新偶尔查不到新版」——jsDelivr 的分支缓存发布后十几分钟仍返回旧清单，GitHub API 又按 IP 限流；分享方式去掉微信 zip；新增「用其他应用打开」；主界面流光提速到约 6 秒一轮",
+  "notesEn": "Added a GitHub Pages manifest mirror, fixing occasional stale update checks (jsDelivr branch cache lags ~15 min+, GitHub API is IP rate-limited). Removed the WeChat .zip share option; added \"Open in Another App\"; fluid background sped up to ~6s per cycle."
 }
