@@ -1,13 +1,13 @@
 {
   "version": "1.6.7",
-  "build": 62,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b62/update/Newloc-1.6.7-b62.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b62/update/NewlocUltimate-1.6.7-b62.bin",
-  "size": 4083047,
-  "sha256": "28686f9e92ff260d3e25ca1d6ec7a0817eae714a4ca75daec0f840f65758b8a7",
-  "sizeUltimate": 4195933,
-  "sha256Ultimate": "d301e18c7ce28529fc403f8be3fd2404a251adfbe8915282d836f04185f3aecb",
+  "build": 63,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b63/update/Newloc-1.6.7-b63.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.7-b63/update/NewlocUltimate-1.6.7-b63.bin",
+  "size": 4087077,
+  "sha256": "1dbe5a0208b26bde2cf92e106a77485bea23da73427977b631182ae7e41b08fd",
+  "sizeUltimate": 4202564,
+  "sha256Ultimate": "0847ee5ff36fbb0e8c93f407552436a660fd8a7f8835135bdd8cc83230e6a33c",
   "date": "2026-10-20",
-  "notes": "流光背景：卡片改为半透白叠层（iOS 26 下 Material 会渲染成液态玻璃的灰膜，卡片看起来是一块实心灰板）；背景色团饱和度按原版截图重校；默认卡片透明度回到 70%",
-  "notesEn": "Fluid background: cards now use a translucent white layer instead of Material (on iOS 26 Material renders as Liquid Glass, making cards look like solid grey slabs); blob saturation recalibrated against the original; default card transparency back to 70%"
+  "notes": "分享面板新增「用其他应用打开」（走系统文档打开通路，签名工具更认这条路）；「分享 IPA」额外注册 public.data / public.item 类型，修掉部分签名工具列不出本应用的问题；主界面流光背景速度提到约 6 秒一轮（原来 13 秒）",
+  "notesEn": "Share sheet: new \"Open in Another App\" entry (document-open path, more reliable for signing tools). \"Share IPA\" now also registers public.data / public.item so more tools show up. Home-screen fluid background sped up to ~6s per cycle (was 13s)."
 }
