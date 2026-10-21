@@ -1,6 +1,6 @@
 {
   "version": "1.6.8",
-  "build": 72,
+  "build": 73,
   "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b72/update/Newloc-1.6.8-b72.bin",
   "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b72/update/NewlocUltimate-1.6.8-b72.bin",
   "size": 4112991,
@@ -8,6 +8,6 @@
   "sizeUltimate": 4227283,
   "sha256Ultimate": "ebeac68f235a70fbe44a872595c874d2fbe18707be1e38eba3b537d026fb2004",
   "date": "2026-10-22",
-  "notes": "修掉「下载完成但文件瞬间消失」：清理旧包时改用真实路径比较（设备上 /var 与 /private/var 是同一文件，之前会把自己刚下的包当旧包删掉）。附带：交付失败可一键重下，落盘后立即记日志",
-  "notesEn": "Fixed 'file vanishes right after download': cleanup now compares resolved paths (on device /var and /private/var are the same file, so the fresh package was being deleted as if it were old). Also: one-tap re-download on delivery failure, and post-commit logging."
+  "notes": "（测试清单）验收「下载完文件被打包误删」的修复：下载后先看「文件」App 有没有 Newloc 全能版文件夹，再试导入。测完此清单会撤回",
+  "notesEn": "(test manifest) verify the file-deletion fix; this manifest will be reverted after testing"
 }
