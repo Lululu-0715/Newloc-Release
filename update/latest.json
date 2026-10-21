@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 69,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b69/update/Newloc-1.6.8-b69.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b69/update/NewlocUltimate-1.6.8-b69.bin",
-  "size": 4101033,
-  "sha256": "7bd6199e628aba412139d8d6bbb0178fbfe3aa17c29c4d94e398c579e25a4c8c",
-  "sizeUltimate": 4216988,
-  "sha256Ultimate": "7a70ca12844d5d653ea6c49f1bc5025869e2a1f594d8b04a2bb00902347bb8ac",
+  "build": 70,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b70/update/Newloc-1.6.8-b70.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b70/update/NewlocUltimate-1.6.8-b70.bin",
+  "size": 4108715,
+  "sha256": "12cfe08e731f28189408388cbe88e5c6c9710ee0b6fa5fce96d41d825ad995df",
+  "sizeUltimate": 4222769,
+  "sha256Ultimate": "d919377c613981586720afeb8664093b11dc783d0736aa80565a29ac9c595ede",
   "date": "2026-10-21",
-  "notes": "下载多源化：包下载从单一 jsDelivr 改为 5 源自动轮换（jsDelivr/fastly/Pages 镜像/GitHub 直连），修掉国内网络「下载失败」；签名工具导入改版延续：用其他应用打开为首选，全能签走「保存到文件」后在其内导入",
-  "notesEn": "Package download now rotates across 5 mirrors (fixes download failures on CN networks); signing-tool import rework continues: 'Open in Another App' primary, UniversalSign via 'Save to Files'."
+  "notes": "签名导入加固：下载完成弹窗直接显示本次文件名+大小；交付前校验文件存在/非空/.ipa（失败明确提示不弹空面板）；导入按钮写明路径（全能签走保存到文件后单选导入）",
+  "notesEn": "Import hardening: the post-download sheet shows the exact file name and size; delivery is validated (exists / non-empty / .ipa) with a clear error instead of a dead menu; import buttons spell out the path (UniversalSign: Save to Files, then single-select import)."
 }
