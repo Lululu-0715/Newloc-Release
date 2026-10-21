@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 72,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b72/update/Newloc-1.6.8-b72.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b72/update/NewlocUltimate-1.6.8-b72.bin",
+  "build": 73,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b73/update/Newloc-1.6.8-b73.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b73/update/NewlocUltimate-1.6.8-b73.bin",
   "size": 4112991,
-  "sha256": "09823fae172fa7569e7ae2995591048cf540bf66175b4f4ffa9b55853d4acf96",
+  "sha256": "50599389bfa7b081f4bb07ef2386e12d287d1a250bfa36341822d16fcd574780",
   "sizeUltimate": 4227283,
-  "sha256Ultimate": "ebeac68f235a70fbe44a872595c874d2fbe18707be1e38eba3b537d026fb2004",
+  "sha256Ultimate": "66d22d424a6016656392e5e8042dc682a9886eb8ffeed88a0c259de890a70c6a",
   "date": "2026-10-22",
-  "notes": "修掉「下载完成但文件瞬间消失」：清理旧包时改用真实路径比较（设备上 /var 与 /private/var 是同一文件，之前会把自己刚下的包当旧包删掉）。附带：交付失败可一键重下，落盘后立即记日志",
-  "notesEn": "Fixed 'file vanishes right after download': cleanup now compares resolved paths."
+  "notes": "本版功能与 b72 一致（仅补充项目文档与踩坑记录）；适用于验证「开启文件访问」开关对文件 App 可见性的影响",
+  "notesEn": "Same functionality as b72 (docs/notes only); intended for verifying the file-access toggle's effect."
 }
