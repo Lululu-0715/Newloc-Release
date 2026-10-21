@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 73,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b73/update/Newloc-1.6.8-b73.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b73/update/NewlocUltimate-1.6.8-b73.bin",
-  "size": 4112991,
-  "sha256": "50599389bfa7b081f4bb07ef2386e12d287d1a250bfa36341822d16fcd574780",
-  "sizeUltimate": 4227283,
-  "sha256Ultimate": "66d22d424a6016656392e5e8042dc682a9886eb8ffeed88a0c259de890a70c6a",
+  "build": 74,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b74/update/Newloc-1.6.8-b74.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b74/update/NewlocUltimate-1.6.8-b74.bin",
+  "size": 4113940,
+  "sha256": "cc2eafb994e8af8e74ad62969747f735f1ae60610dc68ca5be468cd524971f0c",
+  "sizeUltimate": 4228181,
+  "sha256Ultimate": "25cf68b8f968acf2cc8b65694d14a766a849d7f678440d66f35ce38ce4af4c6a",
   "date": "2026-10-22",
-  "notes": "本版功能与 b72 一致（仅补充项目文档与踩坑记录）；适用于验证「开启文件访问」开关对文件 App 可见性的影响",
-  "notesEn": "Same functionality as b72 (docs/notes only); intended for verifying the file-access toggle's effect."
+  "notes": "性能：校验与哈希移出主线程（下载完成不再卡顿）、玻璃卡第二相位图按需烘焙（首帧少一半开销）；导入按钮文案回归简洁",
+  "notesEn": "Performance: verification/hashing moved off the main thread; card backdrop phase-2 now baked lazily. Button labels simplified."
 }
