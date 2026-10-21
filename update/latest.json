@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
   "build": 69,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b68/update/Newloc-1.6.8-b68.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b68/update/NewlocUltimate-1.6.8-b68.bin",
-  "size": 4098400,
-  "sha256": "84f1ae044e1ee6979f904c50e63260f14dea6cfecea45c275f6ab87f7881a30e",
-  "sizeUltimate": 4213839,
-  "sha256Ultimate": "5440fc6a6545c2d31d9ba44fb9d3504e0f7ed7feb3f0f015bee2184413b4f848",
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b69/update/Newloc-1.6.8-b69.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b69/update/NewlocUltimate-1.6.8-b69.bin",
+  "size": 4101033,
+  "sha256": "7bd6199e628aba412139d8d6bbb0178fbfe3aa17c29c4d94e398c579e25a4c8c",
+  "sizeUltimate": 4216988,
+  "sha256Ultimate": "7a70ca12844d5d653ea6c49f1bc5025869e2a1f594d8b04a2bb00902347bb8ac",
   "date": "2026-10-21",
-  "notes": "（测试清单）导入方式改版验收用：请走「用其他应用打开」和「保存到文件」各一遍，测完此清单会撤回",
-  "notesEn": "(test manifest) please try both 'Open in Another App' and 'Save to Files'; this manifest will be reverted after testing"
+  "notes": "下载多源化：包下载从单一 jsDelivr 改为 5 源自动轮换（jsDelivr/fastly/Pages 镜像/GitHub 直连），修掉国内网络「下载失败」；签名工具导入改版延续：用其他应用打开为首选，全能签走「保存到文件」后在其内导入",
+  "notesEn": "Package download now rotates across 5 mirrors (fixes download failures on CN networks); signing-tool import rework continues: 'Open in Another App' primary, UniversalSign via 'Save to Files'."
 }
