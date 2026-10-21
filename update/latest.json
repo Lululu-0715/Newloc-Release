@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 71,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b71/update/Newloc-1.6.8-b71.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b71/update/NewlocUltimate-1.6.8-b71.bin",
-  "size": 4108389,
-  "sha256": "b28e5615d789b88077f6ea65cb504f2e45897674d78af361c663200e95689f50",
-  "sizeUltimate": 4224163,
-  "sha256Ultimate": "e5a4a937eb11966af814963b91fd89183c3b6bd77aa59c6b18c234f39f82e5ed",
-  "date": "2026-10-21",
-  "notes": "修复签名工具导入：去掉 LSSupportsOpeningDocumentsInPlace —— 之前是把我们沙盒里的 file URL 就地递过去，全能签/轻松签不认这个形态；现在 iOS 会复制一份到对方 Inbox。下载后弹窗显示本次文件名+大小，交付前校验文件存在/非空/.ipa",
-  "notesEn": "Fixed signing-tool import: dropped LSSupportsOpeningDocumentsInPlace so iOS copies the IPA into the receiving app's Inbox instead of handing out an in-place file URL (which both ESign and UniversalSign reject). Post-download sheet now shows the exact file name/size and validates the file before delivery."
+  "build": 72,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b72/update/Newloc-1.6.8-b72.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b72/update/NewlocUltimate-1.6.8-b72.bin",
+  "size": 4112991,
+  "sha256": "09823fae172fa7569e7ae2995591048cf540bf66175b4f4ffa9b55853d4acf96",
+  "sizeUltimate": 4227283,
+  "sha256Ultimate": "ebeac68f235a70fbe44a872595c874d2fbe18707be1e38eba3b537d026fb2004",
+  "date": "2026-10-22",
+  "notes": "修掉「下载完成但文件瞬间消失」：清理旧包时改用真实路径比较（设备上 /var 与 /private/var 是同一文件，之前会把自己刚下的包当旧包删掉）。附带：交付失败可一键重下，落盘后立即记日志",
+  "notesEn": "Fixed 'file vanishes right after download': cleanup now compares resolved paths (on device /var and /private/var are the same file, so the fresh package was being deleted as if it were old). Also: one-tap re-download on delivery failure, and post-commit logging."
 }
