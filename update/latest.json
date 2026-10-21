@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 66,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b66/update/Newloc-1.6.8-b66.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b66/update/NewlocUltimate-1.6.8-b66.bin",
-  "size": 4101454,
-  "sha256": "fc3582b6f88fa6787e8e15d374c546fcbde64acf615df4968aa2770517bbd47d",
-  "sizeUltimate": 4215948,
-  "sha256Ultimate": "e870bd52a0b0fc9afa75f5dcd97adfdae5f71c975ba66adf1e51a0ac80297df5",
-  "date": "2026-10-20",
-  "notes": "流光背景「流动」档色团整体加深；柔光档修掉浓度滑块后三分之一拖不动的死区；设置页会员卡改版：新增个人中心（设备码可复制、输入卡密、解绑带二次确认），删掉与主界面重复的虚拟定位状态卡",
-  "notesEn": "Deepened the fluid-background blobs; fixed the dead zone where the glow-intensity slider did nothing past ~2/3; reworked the membership card: new Personal Center (copyable device code, card activation, uninstall with confirmation) and removed the duplicate spoof-status card."
+  "build": 67,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b67/update/Newloc-1.6.8-b67.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b67/update/NewlocUltimate-1.6.8-b67.bin",
+  "size": 4103414,
+  "sha256": "685b9edcdad4ae248154a99bc97673bff7c048dcba9dea1004f511fbdf868ab0",
+  "sizeUltimate": 4218990,
+  "sha256Ultimate": "2c10364cd555790be43149e0fe648839a07416724a7b6dde19ac91d5911f7f8d",
+  "date": "2026-10-21",
+  "notes": "主界面卡片背板跟随流光风格：柔光/流动两套色板，切风格立即生效；流动档卡片背板加深校准（隔着液态玻璃也能看出）；会员卡细节调整",
+  "notesEn": "Main-screen card backdrops now follow the glow style (soft/fluid) with immediate effect; fluid-style card backdrops calibrated to stay visible through liquid glass; membership card tweaks."
 }
