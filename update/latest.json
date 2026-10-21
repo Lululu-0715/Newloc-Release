@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 70,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b70/update/Newloc-1.6.8-b70.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b70/update/NewlocUltimate-1.6.8-b70.bin",
-  "size": 4108715,
-  "sha256": "12cfe08e731f28189408388cbe88e5c6c9710ee0b6fa5fce96d41d825ad995df",
-  "sizeUltimate": 4222769,
-  "sha256Ultimate": "d919377c613981586720afeb8664093b11dc783d0736aa80565a29ac9c595ede",
+  "build": 71,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b71/update/Newloc-1.6.8-b71.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b71/update/NewlocUltimate-1.6.8-b71.bin",
+  "size": 4108389,
+  "sha256": "b28e5615d789b88077f6ea65cb504f2e45897674d78af361c663200e95689f50",
+  "sizeUltimate": 4224163,
+  "sha256Ultimate": "e5a4a937eb11966af814963b91fd89183c3b6bd77aa59c6b18c234f39f82e5ed",
   "date": "2026-10-21",
-  "notes": "签名导入加固：下载完成弹窗直接显示本次文件名+大小；交付前校验文件存在/非空/.ipa（失败明确提示不弹空面板）；导入按钮写明路径（全能签走保存到文件后单选导入）",
-  "notesEn": "Import hardening: the post-download sheet shows the exact file name and size; delivery is validated (exists / non-empty / .ipa) with a clear error instead of a dead menu; import buttons spell out the path (UniversalSign: Save to Files, then single-select import)."
+  "notes": "修复签名工具导入：去掉 LSSupportsOpeningDocumentsInPlace —— 之前是把我们沙盒里的 file URL 就地递过去，全能签/轻松签不认这个形态；现在 iOS 会复制一份到对方 Inbox。下载后弹窗显示本次文件名+大小，交付前校验文件存在/非空/.ipa",
+  "notesEn": "Fixed signing-tool import: dropped LSSupportsOpeningDocumentsInPlace so iOS copies the IPA into the receiving app's Inbox instead of handing out an in-place file URL (which both ESign and UniversalSign reject). Post-download sheet now shows the exact file name/size and validates the file before delivery."
 }
