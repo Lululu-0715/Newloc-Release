@@ -1,6 +1,6 @@
 {
   "version": "1.6.8",
-  "build": 68,
+  "build": 69,
   "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b68/update/Newloc-1.6.8-b68.bin",
   "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b68/update/NewlocUltimate-1.6.8-b68.bin",
   "size": 4098400,
@@ -8,6 +8,6 @@
   "sizeUltimate": 4213839,
   "sha256Ultimate": "5440fc6a6545c2d31d9ba44fb9d3504e0f7ed7feb3f0f015bee2184413b4f848",
   "date": "2026-10-21",
-  "notes": "签名工具导入改版：下线系统分享面板（拆包定案轻松签/全能签无分享扩展，分享面板里永远不出现）；「用其他应用打开」成为签名工具首选入口；全能签用户推荐「保存到文件」后在其内导入",
-  "notesEn": "Signing-tool import rework: removed the system share sheet (neither ESign nor UniversalSign has a share extension); 'Open in Another App' is now the primary path; UniversalSign users should use 'Save to Files' then import inside the app."
+  "notes": "（测试清单）导入方式改版验收用：请走「用其他应用打开」和「保存到文件」各一遍，测完此清单会撤回",
+  "notesEn": "(test manifest) please try both 'Open in Another App' and 'Save to Files'; this manifest will be reverted after testing"
 }
