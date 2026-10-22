@@ -1,13 +1,13 @@
 {
-  "version": "1.6.8",
-  "build": 75,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b75/update/Newloc-1.6.8-b75.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b75/update/NewlocUltimate-1.6.8-b75.bin",
-  "size": 4116360,
-  "sha256": "cac3956d4d42a942aeda29228e16ca8e4eb562750742b6a5c625cc74948fda04",
-  "sizeUltimate": 4231166,
-  "sha256Ultimate": "8df375c8be9c54f852a4d11835d089ef25c2b79a112179dfd9f754d7d0dfaf53",
-  "date": "2026-10-22",
-  "notes": "新增「跳过此版本」：跳过后不再自动提示这一版，手动检查仍可见；下载失败时新增「用浏览器下载」兜底，直接打开对应版本的 Release 页面",
-  "notesEn": "Added 'Skip This Version' (stops automatic prompts for this build; manual check still shows it) and a browser-download fallback that opens the release page when in-app download fails."
+  "version": "1.6.9",
+  "build": 76,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b76/update/Newloc-1.6.9-b76.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b76/update/NewlocUltimate-1.6.9-b76.bin",
+  "size": 4141049,
+  "sha256": "a422c96146c9de4b2a3cf7b3fbf5a4b1dcb7d2528b8e9d7cdae1efd742cee308",
+  "sizeUltimate": 4255456,
+  "sha256Ultimate": "c7bb5dbac0d0f20518f4ef2f2241b37c0626a38df84dc9f2bf9419ee53336ff2",
+  "date": "2026-10-23",
+  "notes": "会员卡右上角换黑色图标并放大，「Newloc 会员」与状态徽章之间的间距收紧；流光背景新增 6 套配色——柔光的石墨 / 琥珀，流动的青竹 / 樱粉 / 雾紫 / 落霞（流动配色改为混色，对比更明显）",
+  "notesEn": "New black app icon on the membership card (slightly larger) and tighter spacing above the title. Six new background palettes: Graphite and Amber for the soft glow style, and Bamboo, Sakura, Haze and Sundown for the fluid style (fluid palettes now mix hues for more contrast)."
 }
