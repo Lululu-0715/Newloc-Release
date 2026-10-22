@@ -1,13 +1,13 @@
 {
   "version": "1.6.8",
-  "build": 74,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b74/update/Newloc-1.6.8-b74.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b74/update/NewlocUltimate-1.6.8-b74.bin",
-  "size": 4113940,
-  "sha256": "cc2eafb994e8af8e74ad62969747f735f1ae60610dc68ca5be468cd524971f0c",
-  "sizeUltimate": 4228181,
-  "sha256Ultimate": "25cf68b8f968acf2cc8b65694d14a766a849d7f678440d66f35ce38ce4af4c6a",
+  "build": 75,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b75/update/Newloc-1.6.8-b75.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.8-b75/update/NewlocUltimate-1.6.8-b75.bin",
+  "size": 4116360,
+  "sha256": "cac3956d4d42a942aeda29228e16ca8e4eb562750742b6a5c625cc74948fda04",
+  "sizeUltimate": 4231166,
+  "sha256Ultimate": "8df375c8be9c54f852a4d11835d089ef25c2b79a112179dfd9f754d7d0dfaf53",
   "date": "2026-10-22",
-  "notes": "性能：校验与哈希移出主线程（下载完成不再卡顿）、玻璃卡第二相位图按需烘焙（首帧少一半开销）；导入按钮文案回归简洁",
-  "notesEn": "Performance: verification/hashing moved off the main thread; card backdrop phase-2 now baked lazily. Button labels simplified."
+  "notes": "新增「跳过此版本」：跳过后不再自动提示这一版，手动检查仍可见；下载失败时新增「用浏览器下载」兜底，直接打开对应版本的 Release 页面",
+  "notesEn": "Added 'Skip This Version' (stops automatic prompts for this build; manual check still shows it) and a browser-download fallback that opens the release page when in-app download fails."
 }
