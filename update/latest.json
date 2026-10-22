@@ -1,13 +1,13 @@
 {
   "version": "1.6.9",
-  "build": 76,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b76/update/Newloc-1.6.9-b76.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b76/update/NewlocUltimate-1.6.9-b76.bin",
-  "size": 4141049,
-  "sha256": "a422c96146c9de4b2a3cf7b3fbf5a4b1dcb7d2528b8e9d7cdae1efd742cee308",
-  "sizeUltimate": 4255456,
-  "sha256Ultimate": "c7bb5dbac0d0f20518f4ef2f2241b37c0626a38df84dc9f2bf9419ee53336ff2",
+  "build": 77,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b77/update/Newloc-1.6.9-b77.bin",
+  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b77/update/NewlocUltimate-1.6.9-b77.bin",
+  "size": 4141247,
+  "sha256": "3c987a20ea984af3c794599519ec9015aae24f42db46d28263530f7f0e09597b",
+  "sizeUltimate": 4255830,
+  "sha256Ultimate": "47de3f7167c2db66ec90ba7f7f9b5c664bc796e402b2e994347d0d124b07948f",
   "date": "2026-10-23",
-  "notes": "会员卡右上角换黑色图标并放大，「Newloc 会员」与状态徽章之间的间距收紧；流光背景新增 6 套配色——柔光的石墨 / 琥珀，流动的青竹 / 樱粉 / 雾紫 / 落霞（流动配色改为混色，对比更明显）",
-  "notesEn": "New black app icon on the membership card (slightly larger) and tighter spacing above the title. Six new background palettes: Graphite and Amber for the soft glow style, and Bamboo, Sakura, Haze and Sundown for the fluid style (fluid palettes now mix hues for more contrast)."
+  "notes": "流动背景观感优化：色团边缘改为高斯式柔化（不再看得出圆盘边界），移动改为短距离游走（不再横穿整屏）；晨雾配色加深，夜海与沙丘改成混色",
+  "notesEn": "Fluid background polish: gaussian-soft blob edges (no more visible discs) and short random walks instead of screen-crossing jumps. Mist is deeper; Midnight and Dune now mix hues."
 }
