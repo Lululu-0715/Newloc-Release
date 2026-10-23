@@ -45,10 +45,10 @@ http:
       binary-body-mode: true
       max-size: 0
       timeout: 30
-      script: https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc@main/ThirdParty/ProxyScripts/wloc.js
+      script: https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/wloc.js
     - name: wloc-settings
       match: ^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save
       type: request
       require-body: false
       timeout: 10
-      script: https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc@main/ThirdParty/ProxyScripts/wloc-settings.js
+      script: https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/wloc-settings.js
