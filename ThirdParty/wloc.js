@@ -652,17 +652,246 @@ function isGzip(bytes) {
  * 由调用方把这件事记进诊断，让用户在应用里直接看到原因。
  */
 function gunzipBytes(bytes) {
+  let native = null;
   try {
     if (typeof $utils !== 'undefined' && typeof $utils.ungzip === 'function') {
       const out = $utils.ungzip(toBinaryString(bytes));
-      if (!out) return null;
-      if (typeof out === 'string') return toBytes(out);
-      return Array.from(out, (byte) => byte & 0xff);
+      if (out) {
+        native = typeof out === 'string' ? toBytes(out) : Array.from(out, (byte) => byte & 0xff);
+      }
     }
   } catch (error) {
-    log(`gzip 解压失败: ${error}`);
+    log(`客户端解压 API 失败: ${error}`);
   }
-  return null;
+  if (native) return native;
+
+  // 客户端没给解压能力（Shadowrocket / Quantumult X 都没有）→ 用自己的实现。
+  // 这是 2026-10-23 补的那条路：以前这里直接返回 null，于是这两个客户端上
+  // 只要 Apple 用 gzip 回包，改写就整段静默跳过。
+  return inflateGzipBytes(bytes);
+}
+
+// ---------------------------------------------------------------------------
+// 纯 JS 解压（RFC 1952 gzip 封装 + RFC 1951 deflate）
+// ---------------------------------------------------------------------------
+//
+// 为什么值得自己写一份：`$utils.ungzip` 只有 Surge / Egern / Loon / Stash 提供，
+// **Shadowrocket 和 Quantumult X 没有**，而 Shadowrocket 恰好是默认客户端。
+// 在那两个客户端上，遇到 gzip 就等于「模块装着、坐标写了、定位不动」。
+//
+// 只做解压，不做压缩：解压后由调用方去掉 Content-Encoding 回明文（见 main）。
+
+/** 长度码 257~285 的基准值与额外位数。 */
+const LENGTH_BASE = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
+  35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258];
+const LENGTH_EXTRA = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
+  3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0];
+
+/** 距离码 0~29 的基准值与额外位数。 */
+const DIST_BASE = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
+  257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577];
+const DIST_EXTRA = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
+  7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13];
+
+/** 动态块里「码长码」的传输顺序（RFC 1951 §3.2.7）。 */
+const CODE_LENGTH_ORDER = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+
+/** 解一个 gzip 容器，返回解压后的字节数组；失败返回 null。 */
+function inflateGzipBytes(bytes) {
+  if (!isGzip(bytes) || bytes.length < 18) return null;
+
+  const flags = bytes[3] & 0xff;
+  let offset = 10;
+
+  if (flags & 0x04) {                       // FEXTRA
+    if (offset + 2 > bytes.length) return null;
+    const xlen = bytes[offset] | (bytes[offset + 1] << 8);
+    offset += 2 + xlen;
+  }
+  if (flags & 0x08) {                       // FNAME
+    while (offset < bytes.length && bytes[offset] !== 0) offset += 1;
+    offset += 1;
+  }
+  if (flags & 0x10) {                       // FCOMMENT
+    while (offset < bytes.length && bytes[offset] !== 0) offset += 1;
+    offset += 1;
+  }
+  if (flags & 0x02) offset += 2;            // FHCRC
+
+  if (offset >= bytes.length) return null;
+
+  try {
+    return inflateRawBytes(bytes, offset);
+  } catch (error) {
+    log(`内置解压失败: ${error && error.message ? error.message : error}`);
+    return null;
+  }
+}
+
+/** 规范 Huffman 表：`(码长:码字) → 符号`。 */
+function buildHuffman(lengths) {
+  let maxLen = 0;
+  for (let i = 0; i < lengths.length; i += 1) {
+    if (lengths[i] > maxLen) maxLen = lengths[i];
+  }
+
+  const counts = [];
+  for (let len = 0; len <= maxLen; len += 1) counts.push(0);
+  for (let i = 0; i < lengths.length; i += 1) {
+    if (lengths[i]) counts[lengths[i]] += 1;
+  }
+
+  const nextCode = [];
+  let code = 0;
+  for (let len = 1; len <= maxLen; len += 1) {
+    code = (code + counts[len - 1]) << 1;
+    nextCode[len] = code;
+  }
+
+  const table = {};
+  for (let symbol = 0; symbol < lengths.length; symbol += 1) {
+    const len = lengths[symbol];
+    if (!len) continue;
+    table[`${len}:${nextCode[len]}`] = symbol;
+    nextCode[len] += 1;
+  }
+
+  return { table, maxLen };
+}
+
+/** 固定 Huffman 表（块类型 1）。规范里的码长分布，交给上面同一套算法生成。 */
+function fixedHuffmanTables() {
+  const litLengths = [];
+  for (let i = 0; i <= 287; i += 1) {
+    if (i <= 143) litLengths.push(8);
+    else if (i <= 255) litLengths.push(9);
+    else if (i <= 279) litLengths.push(7);
+    else litLengths.push(8);
+  }
+  const distLengths = [];
+  for (let i = 0; i < 30; i += 1) distLengths.push(5);
+  return { lit: buildHuffman(litLengths), dist: buildHuffman(distLengths) };
+}
+
+let fixedTables = null;
+
+/** 解一段 raw deflate，返回字节数组；数据不合法时抛错。 */
+function inflateRawBytes(bytes, start) {
+  let bitPos = start * 8;
+  const out = [];
+
+  function readBit() {
+    const index = bitPos >> 3;
+    if (index >= bytes.length) throw new Error('数据提前结束');
+    const bit = (bytes[index] >> (bitPos & 7)) & 1;
+    bitPos += 1;
+    return bit;
+  }
+
+  function readBits(count) {
+    let value = 0;
+    for (let i = 0; i < count; i += 1) value |= readBit() << i;
+    return value;
+  }
+
+  function alignToByte() { bitPos = (bitPos + 7) & ~7; }
+
+  function decodeSymbol(huffman) {
+    let code = 0;
+    for (let len = 1; len <= huffman.maxLen; len += 1) {
+      code = (code << 1) | readBit();
+      const symbol = huffman.table[`${len}:${code}`];
+      if (symbol !== undefined) return symbol;
+    }
+    throw new Error('无效的 Huffman 编码');
+  }
+
+  for (;;) {
+    const isFinal = readBits(1);
+    const type = readBits(2);
+
+    if (type === 0) {
+      // 存储块：按字节对齐后直拷。
+      alignToByte();
+      const index = bitPos >> 3;
+      if (index + 4 > bytes.length) throw new Error('存储块头部不完整');
+      const length = bytes[index] | (bytes[index + 1] << 8);
+      const inverse = bytes[index + 2] | (bytes[index + 3] << 8);
+      if ((length ^ 0xffff) !== inverse) throw new Error('存储块长度校验失败');
+      bitPos = (index + 4) * 8;
+      for (let i = 0; i < length; i += 1) out.push(readBits(8));
+
+    } else if (type === 1 || type === 2) {
+      let litTable;
+      let distTable;
+
+      if (type === 1) {
+        if (!fixedTables) fixedTables = fixedHuffmanTables();
+        litTable = fixedTables.lit;
+        distTable = fixedTables.dist;
+      } else {
+        const litCount = readBits(5) + 257;
+        const distCount = readBits(5) + 1;
+        const codeCount = readBits(4) + 4;
+
+        const codeLengths = new Array(19).fill(0);
+        for (let i = 0; i < codeCount; i += 1) {
+          codeLengths[CODE_LENGTH_ORDER[i]] = readBits(3);
+        }
+        const codeTable = buildHuffman(codeLengths);
+
+        const lengths = [];
+        while (lengths.length < litCount + distCount) {
+          const symbol = decodeSymbol(codeTable);
+          if (symbol < 16) { lengths.push(symbol); continue; }
+
+          let repeat = 0;
+          let value = 0;
+          if (symbol === 16) {
+            if (!lengths.length) throw new Error('重复码缺少前值');
+            value = lengths[lengths.length - 1];
+            repeat = 3 + readBits(2);
+          } else if (symbol === 17) {
+            repeat = 3 + readBits(3);
+          } else {
+            repeat = 11 + readBits(7);
+          }
+          for (let i = 0; i < repeat; i += 1) lengths.push(value);
+        }
+
+        litTable = buildHuffman(lengths.slice(0, litCount));
+        distTable = buildHuffman(lengths.slice(litCount, litCount + distCount));
+      }
+
+      for (;;) {
+        const symbol = decodeSymbol(litTable);
+        if (symbol < 256) { out.push(symbol); continue; }
+        if (symbol === 256) break;
+
+        const lengthIndex = symbol - 257;
+        if (lengthIndex < 0 || lengthIndex >= LENGTH_BASE.length) {
+          throw new Error('长度码越界');
+        }
+        const length = LENGTH_BASE[lengthIndex] + readBits(LENGTH_EXTRA[lengthIndex]);
+
+        const distSymbol = decodeSymbol(distTable);
+        if (distSymbol >= DIST_BASE.length) throw new Error('距离码越界');
+        const distance = DIST_BASE[distSymbol] + readBits(DIST_EXTRA[distSymbol]);
+        if (distance > out.length) throw new Error('回溯距离越界');
+
+        for (let i = 0; i < length; i += 1) {
+          out.push(out[out.length - distance]);
+        }
+      }
+
+    } else {
+      throw new Error('无效的块类型');
+    }
+
+    if (isFinal) break;
+  }
+
+  return out;
 }
 
 /** 把响应体转成字节数组。
