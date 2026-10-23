@@ -15,6 +15,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
+import { gzipSync } from 'node:zlib';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const WLOC_SOURCE = readFileSync(join(HERE, 'wloc.js'), 'utf8');
@@ -85,10 +86,19 @@ function buildSampleResponse() {
  */
 function runScript(source, globals) {
   let doneArg = undefined;
+  const sandbox = makeSandbox(globals, (arg) => { doneArg = arg; });
 
-  const sandbox = {
+  vm.createContext(sandbox);
+  vm.runInContext(source, sandbox, { timeout: 5000 });
+
+  return doneArg;
+}
+
+/** 造一个沙箱对象（runScript 与 loadSandbox 共用，避免两处漂移）。 */
+function makeSandbox(globals, onDone) {
+  return {
     console: { log() {}, warn() {}, error() {} },
-    $done: (arg) => { doneArg = arg; },
+    $done: onDone,
     JSON,
     Math,
     Number,
@@ -101,11 +111,20 @@ function runScript(source, globals) {
     encodeURIComponent,
     ...globals,
   };
+}
 
+/**
+ * 执行脚本并**把沙箱交回来**。
+ *
+ * 用途：脚本顶层的 `function` 声明在经典脚本里会挂到全局对象上，
+ * 拿回沙箱就能直接调内部函数做单测 —— 解压这种「输入输出都是字节」的
+ * 纯函数，走 $done 做端到端断言只能覆盖到碰巧被走到的那条分支。
+ */
+function loadSandbox(source, globals) {
+  const sandbox = makeSandbox(globals || {}, () => {});
   vm.createContext(sandbox);
   vm.runInContext(source, sandbox, { timeout: 5000 });
-
-  return doneArg;
+  return sandbox;
 }
 
 /** 二进制字符串 → 字节数组 */
@@ -939,4 +958,91 @@ test('诊断里记下回包形状，便于判断是不是客户端没开二进�
   });
 
   assert.strictEqual(JSON.parse(state.wloc_diag).binary, false);
+});
+
+
+// ---------------------------------------------------------------------------
+// 内置 gzip 解压（2026-10-23）
+//
+// Shadowrocket / Quantumult X 没有 $utils.ungzip，而它俩恰好是主力客户端 ——
+// 以前这两个客户端上遇到 gzip 就是静默跳过改写。下面三个用例分别钉住：
+//   ① 端到端：没有 $utils 时也能解压 + 改写 + 去掉压缩头；
+//   ② 动态 Huffman 块（真实响应最常见的那种）能逐字节还原；
+//   ③ 数据坏了不许抛到外面，只能放行。
+// ---------------------------------------------------------------------------
+
+test('gzip 响应：客户端没有解压 API 时用内置解压，坐标照样改写', () => {
+  const settings = JSON.stringify({
+    enabled: true,
+    latitude: 22.281508,
+    longitude: 114.1747,
+    accuracy: 30,
+  });
+
+  const response = buildSampleResponse();
+  const gz = gzipSync(Buffer.from(response));
+
+  const result = runScript(WLOC_SOURCE, {
+    // 二进制字符串：每个字符就是一个字节。
+    $response: {
+      body: gz.toString('latin1'),
+      headers: {
+        'Content-Encoding': 'gzip',
+        'Content-Length': String(gz.length),
+        'X-Keep': '1',
+      },
+    },
+    $persistentStore: {
+      read: (key) => (key === 'wloc_settings' ? settings : null),
+    },
+  });
+
+  assert.ok(result && typeof result.body === 'string', '应当返回改写后的响应体');
+
+  const bytes = toBytes(result.body);
+  assert.strictEqual(Number(findVarintDeep(bytes, 1)), Math.round(22.281508 * 1e8));
+  assert.strictEqual(Number(findVarintDeep(bytes, 2)), Math.round(114.1747 * 1e8));
+
+  // 解压过了就必须把压缩相关的头去掉，否则客户端会去解一段明文。
+  assert.strictEqual(result.headers['Content-Encoding'], undefined);
+  assert.strictEqual(result.headers['Content-Length'], undefined);
+  assert.strictEqual(result.headers['X-Keep'], '1', '无关的头必须原样保留');
+});
+
+test('内置解压：动态 Huffman 块逐字节还原', () => {
+  const sandbox = loadSandbox(WLOC_SOURCE, {
+    $persistentStore: { read: () => null },
+  });
+
+  // 带一点熵的文本才会让 zlib 选动态 Huffman（纯重复内容走的是固定表）。
+  let text = '';
+  let seed = 12345;
+  for (let i = 0; i < 4000; i += 1) {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    text += String.fromCharCode(32 + (seed % 95));
+  }
+
+  const original = Buffer.from(text, 'latin1');
+  const gz = gzipSync(original, { level: 6 });
+  assert.strictEqual((gz[10] >> 1) & 3, 2, '这个样本必须是动态 Huffman，否则测不到目标分支');
+
+  const out = sandbox.inflateGzipBytes(Array.from(gz));
+  assert.ok(Array.isArray(out), '应当解出字节数组');
+  assert.deepStrictEqual(Buffer.from(out), original);
+});
+
+test('内置解压：截断的 gzip 只放行，不许把异常抛出去', () => {
+  const gz = gzipSync(Buffer.from(buildSampleResponse()));
+  const truncated = gz.subarray(0, Math.floor(gz.length / 2));
+
+  const result = runScript(WLOC_SOURCE, {
+    $response: { body: truncated.toString('latin1') },
+    $persistentStore: {
+      read: () => JSON.stringify({
+        enabled: true, latitude: 22.281508, longitude: 114.1747, accuracy: 30,
+      }),
+    },
+  });
+
+  assertPassthrough(result);
 });
