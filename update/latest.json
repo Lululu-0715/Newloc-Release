@@ -1,13 +1,10 @@
 {
-  "version": "1.6.9",
-  "build": 77,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b77/update/Newloc-1.6.9-b77.bin",
-  "urlUltimate": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.6.9-b77/update/NewlocUltimate-1.6.9-b77.bin",
-  "size": 4141247,
-  "sha256": "3c987a20ea984af3c794599519ec9015aae24f42db46d28263530f7f0e09597b",
-  "sizeUltimate": 4255830,
-  "sha256Ultimate": "47de3f7167c2db66ec90ba7f7f9b5c664bc796e402b2e994347d0d124b07948f",
+  "version": "1.7.0",
+  "build": 78,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b78/update/NewlocUltimate-1.7.0-b78.bin",
+  "size": 4337105,
+  "sha256": "cb027d56494e85809d20a0a2f73ef0a32f36e08c0172f5347a4382b91f6c55df",
   "date": "2026-10-23",
-  "notes": "流动背景观感优化：色团边缘改为高斯式柔化（不再看得出圆盘边界），移动改为短距离游走（不再横穿整屏）；晨雾配色加深，夜海与沙丘改成混色",
-  "notesEn": "Fluid background polish: gaussian-soft blob edges (no more visible discs) and short random walks instead of screen-crossing jumps. Mist is deeper; Midnight and Dune now mix hues."
+  "notes": "- 移动模拟：静止/5米/10米/20米可选，减少原地不动被判异常的概率\n- 定位诊断面板：一键看出缓存、模块、坐标三者状态\n- 前台看护：回到前台 60 秒内自动补写坐标\n- 收藏页支持直接选中并应用\n- 第三方模块导入地址修复：改指发布仓不可变标签，解决死链导致的「模块不工作」\n- gzip 解压兜底：部分网络下响应被压缩时不再解析失败\n- 新增快捷指令：用 Siri 一键应用收藏地点",
+  "notesEn": "- Motion simulation (still/5m/10m/20m)\n- Location diagnostic panel\n- Foreground watchdog: re-applies coordinates within 60s\n- Apply favorites directly\n- Fixed third-party module dead links (immutable tag)\n- gzip fallback for compressed responses\n- App Intents: apply a favorite via Siri"
 }
