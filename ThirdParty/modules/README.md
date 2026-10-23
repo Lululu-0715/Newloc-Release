@@ -46,12 +46,12 @@ Quantumult X 的语法），小火箭读不懂，导入后模块完全不生效�
 
 | 客户端 | 导入地址 |
 |---|---|
-| Shadowrocket | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/modules/wloc.module` |
-| Surge | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/modules/wloc.sgmodule` |
-| Egern | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/modules/wloc.sgmodule` |
-| Quantumult X | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/modules/wloc.conf` |
-| Loon | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/modules/wloc.lpx` |
-| Stash | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@main/ThirdParty/modules/wloc.stoverride` |
+| Shadowrocket | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.module` |
+| Surge | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.sgmodule` |
+| Egern | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.sgmodule` |
+| Quantumult X | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.conf` |
+| Loon | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.lpx` |
+| Stash | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.stoverride` |
 
 直接在客户端里搜文件名是搜不到的，**要粘完整地址**。
 
