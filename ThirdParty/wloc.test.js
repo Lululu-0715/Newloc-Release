@@ -926,7 +926,7 @@ test('文本模式（body 是二进制字符串）仍回字符串', () => {
     Math.round(22.281508 * 1e8));
 });
 
-test('二进制模式下解压 gzip 后要去掉 Content-Encoding', () => {
+test('二进制模式下解压 gzip 后要去掉 Content-Encoding 并重算 Content-Length', () => {
   const { bytes: response } = buildARPCResponse();
   const gzipped = [0x1f, 0x8b, 0x08, 0x00, ...response];
   const { store } = makeStore({ wloc_settings: SETTINGS_ENABLED });
@@ -944,8 +944,52 @@ test('二进制模式下解压 gzip 后要去掉 Content-Encoding', () => {
   assert.ok(ArrayBuffer.isView(result.body));
   assert.ok(result.headers, '解压过就必须回传 headers');
   assert.strictEqual(result.headers['Content-Encoding'], undefined);
-  assert.strictEqual(result.headers['Content-Length'], undefined);
+  // Content-Length 不能沿用旧值（这里客户端报的是 999，明显不对），
+  // 也不能干脆不给 —— 一律按改写后的真实字节数重设。
+  assert.strictEqual(result.headers['Content-Length'], String(result.body.length));
   assert.strictEqual(result.headers['X-Keep'], '1');
+});
+
+test('未压缩的响应也要按改写后的长度重设 Content-Length', () => {
+  // 这一条钉的是「脚本报改写成功、系统却没用」的一种真实成因：
+  // 精度 200 → 25 会让 varint 从 2 字节缩成 1 字节，响应长度必然变化。
+  // 旧版只在「解压过」时才回传 headers，普通响应下头里仍是旧长度，
+  // 以 Content-Length 为准的客户端会截断/多读，系统拿到坏 protobuf 直接丢弃。
+  const { bytes: response } = buildARPCResponse({ accuracy: 200 });
+  const { store } = makeStore({ wloc_settings: SETTINGS_ENABLED });
+
+  const result = runScript(WLOC_SOURCE, {
+    $response: {
+      body: Uint8Array.from(response),
+      headers: { 'Content-Length': String(response.length), 'X-Keep': '1' },
+    },
+    $persistentStore: store,
+  });
+
+  assert.ok(ArrayBuffer.isView(result.body));
+  assert.notStrictEqual(result.body.length, response.length,
+    '本用例要求长度确实发生变化，否则测不到这条');
+  assert.strictEqual(result.headers['Content-Length'], String(result.body.length));
+  assert.strictEqual(result.headers['X-Keep'], '1', '无关的头不许误删');
+});
+
+test('改写后固定 200，并把同一个 buffer 挂到三个字段上', () => {
+  const { bytes: response } = buildARPCResponse();
+  const { store } = makeStore({ wloc_settings: SETTINGS_ENABLED });
+
+  const result = runScript(WLOC_SOURCE, {
+    $response: {
+      body: Uint8Array.from(response),
+      headers: { 'Content-Length': String(response.length), 'Transfer-Encoding': 'chunked' },
+    },
+    $persistentStore: store,
+  });
+
+  assert.strictEqual(result.status, 200);
+  assert.strictEqual(result.statusCode, 200);
+  assert.ok(result.bodyBytes, '部分客户端只认 bodyBytes');
+  assert.ok(result.rawBody, '部分客户端只认 rawBody');
+  assert.strictEqual(result.headers['Transfer-Encoding'], undefined);
 });
 
 test('诊断里记下回包形状，便于判断是不是客户端没开二进制模式', () => {

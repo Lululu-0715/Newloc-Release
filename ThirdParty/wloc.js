@@ -945,11 +945,20 @@ function finishBody(bytes, headers, binaryIn) {
     const view = Uint8Array.from(bytes);
     payload.body = view;
     payload.bodyBytes = view.buffer;
+    // 同一个 buffer 挂三个字段名：各客户端取值习惯不同（Surge 认 body，
+    // 部分 Quantumult X 版本认 bodyBytes，还有直接读 rawBody 的），
+    // 多给一份没有代价，少给一份就是静默不改。
+    payload.rawBody = view;
   } else {
     payload.body = toBinaryString(bytes);
   }
 
-  if (headers) payload.headers = headers;
+  payload.headers = buildHeaders(headers, bytes.length, binaryIn);
+  // 状态码固定 200：改写后的 body 已经是完整可用的响应，沿用原来的 4xx/5xx
+  // 会让系统直接丢弃它。上游脚本同样这么做。
+  payload.status = 200;
+  payload.statusCode = 200;
+
   $done(payload);
 }
 
@@ -1009,23 +1018,36 @@ function driftTarget(target) {
   };
 }
 
-/** 去掉与实体编码 / 长度相关的响应头。
+/** 构造回传的响应头。
  *
- * 解压过 body 之后这两条必须删掉：留着 `Content-Encoding: gzip` 会让
- * 客户端或系统去解压一段已经不压缩的数据，响应直接作废。
+ * 三件事必须做，缺一件都可能让「改写成功」变成「系统没用这份响应」：
+ *
+ * 1. **删掉 `Content-Encoding`**：解压过的 body 已经不压缩了，留着它会让
+ *    客户端再去解压一段原始数据，响应直接作废。
+ * 2. **删掉 `Transfer-Encoding`**：分块传输的描述对一段完整内存 buffer 没有意义。
+ * 3. **按新长度重设 `Content-Length`**：改写后长度不一定与原来相等 ——
+ *    精度从 200 米改成 25 米，varint 就从 2 字节变 1 字节。头里还是旧长度时，
+ *    以头为准的客户端会截断或多读，系统拿到的是一段坏 protobuf，
+ *    解析失败后本次定位作废，而脚本这边报的仍是「改写成功」。
+ *
+ * **文本模式不重设长度**：那时 body 是二进制字符串，客户端会按 UTF-8 重新
+ * 编码，0x80 以上的字节撑成两字节，真实字节数已经无法在这里算准，
+ * 写一个错的长度比不写更糟，交给客户端自己算。
  */
-function stripEntityHeaders(headers) {
-  if (!headers || typeof headers !== 'object') return undefined;
+function buildHeaders(headers, byteLength, binaryIn) {
   const out = {};
-  for (const key in headers) {
-    if (!Object.prototype.hasOwnProperty.call(headers, key)) continue;
-    const lower = String(key).toLowerCase();
-    if (lower === 'content-encoding' || lower === 'content-length'
-        || lower === 'transfer-encoding') {
-      continue;
+  if (headers && typeof headers === 'object') {
+    for (const key in headers) {
+      if (!Object.prototype.hasOwnProperty.call(headers, key)) continue;
+      const lower = String(key).toLowerCase();
+      if (lower === 'content-encoding' || lower === 'content-length'
+          || lower === 'transfer-encoding') {
+        continue;
+      }
+      out[key] = headers[key];
     }
-    out[key] = headers[key];
   }
+  if (binaryIn) out['Content-Length'] = String(byteLength);
   return out;
 }
 
@@ -1081,8 +1103,15 @@ function main() {
     bodyBytes = unzipped;
   }
 
+  // 抖动只取一次：既要用于改写，也要原样上报给应用。
+  //
+  // 上报坐标（lat/lon）是 2026-10-24 加的：应用拿它跟本轮目标比对，
+  // 才能分辨「这次改写确实是为当前目标做的」还是「脚本还停在上一处」。
+  // 以前诊断里只有条数和信封，应用无法判断改的是哪个点。
+  const applied = driftTarget(target);
+
   try {
-    const result = patchWlocBody(bodyBytes, driftTarget(target));
+    const result = patchWlocBody(bodyBytes, applied);
     if (!result) {
       recordDiag('no-match', { in: bodyBytes.length });
       log('未找到可改写的位置数据，放行原始响应');
@@ -1091,6 +1120,8 @@ function main() {
     }
 
     recordDiag('rewritten', {
+      lat: applied.latitude,
+      lon: applied.longitude,
       locations: result.locations,
       envelope: result.envelope,
       gzip: wasGzip,
@@ -1101,21 +1132,14 @@ function main() {
     log(`改写成功，信封 ${result.envelope}，位置条目 ${result.locations} 个，`
       + `回包形状 ${binaryBody ? '二进制' : '文本'}`);
 
-    // 只在解压过的情况下才回传 headers——其余情况一律不动，避免引入回归。
-    // 解压后 Content-Encoding / Content-Length 必须去掉，否则客户端会去解压
-    // 一段已经不压缩的数据，响应直接作废。
-    if (wasGzip) {
-      finishBody(
-        result.bytes,
-        stripEntityHeaders(
-          typeof $response !== 'undefined' ? $response.headers : undefined
-        ),
-        binaryBody
-      );
-      return;
-    }
-
-    finishBody(result.bytes, undefined, binaryBody);
+    // headers 一律回传并重算，不再按「是否解压过」分叉：
+    // 解压场景要摘掉 Content-Encoding；没解压的场景也可能因为精度 varint
+    // 变短而改变长度。分叉正是「gzip 那条修好了、普通响应还在坏」的来源。
+    finishBody(
+      result.bytes,
+      typeof $response !== 'undefined' ? $response.headers : undefined,
+      binaryBody
+    );
   } catch (error) {
     recordDiag('error', {
       reason: String(error && error.message ? error.message : error),

@@ -24,10 +24,10 @@
 # 出来的字节流已经坏了——表现就是「模块在跑、坐标也写进去了，定位纹丝不动」。
 #
 # max-size=0 表示不限制，避免响应稍大就静默跳过。
-wloc-rewrite = type=http-response,pattern=^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp(?:-|\d+-|e\d+(?:-\d+)?-)ssl\.(?:ls\.)?apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc,requires-body=1,binary-body-mode=1,max-size=0,timeout=30,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/wloc.js
+wloc-rewrite = type=http-response,pattern=^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp-ssl\.ls\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc,requires-body=1,binary-body-mode=1,max-size=0,timeout=30,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.24/ThirdParty/wloc.js
 
 # 配置接口：应用通过这个请求把目标坐标写进客户端存储。
-wloc-settings = type=http-request,pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save,requires-body=0,max-size=0,timeout=10,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/wloc-settings.js
+wloc-settings = type=http-request,pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save,requires-body=0,max-size=0,timeout=10,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.24/ThirdParty/wloc-settings.js
 
 [MITM]
-hostname = %APPEND% gs-loc.apple.com, gs-loc-cn.apple.com, gsp-ssl.ls.apple.com, gsp10-ssl.ls.apple.com, gsp10-ssl.apple.com, gsp64-ssl.ls.apple.com, gspe1-ssl.ls.apple.com, gspe19-ssl.ls.apple.com, gspe19-2-ssl.ls.apple.com, gspe35-ssl.ls.apple.com, gspe79-ssl.ls.apple.com, gspe85-ssl.ls.apple.com, bluedot.is.autonavi.com, bluedot.is.autonavi.com.gds.alibabadns.com
+hostname = %APPEND% gs-loc.apple.com, gs-loc-cn.apple.com, gsp-ssl.ls.apple.com, bluedot.is.autonavi.com, bluedot.is.autonavi.com.gds.alibabadns.com
