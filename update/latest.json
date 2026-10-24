@@ -1,10 +1,10 @@
 {
   "version": "1.7.0",
-  "build": 82,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b82/update/NewlocUltimate-1.7.0-b82.bin",
-  "size": 4343829,
-  "sha256": "8bfbef09c710ba235af1d26ce62508b5bd38156680390be6133ed35d37c7daa9",
+  "build": 83,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b83/update/NewlocUltimate-1.7.0-b83.bin",
+  "size": 4356776,
+  "sha256": "0fd67e9d540375cd57df954635e7d26dc8e44dd48ecadb76dbbc072b82042b80",
   "date": "2026-10-24",
-  "notes": "- 判定更诚实：改写落地不再直接报「已生效」，改为「已改写」，回读确认后才变绿\n- 修复「主动停止后再打开 App 会被自动重开」\n- 修复「冷启动时模块坐标丢了永远补不回来」\n- 模块域名精简 14 → 5，导入地址改为新标签（需重新导入模块）\n- 改写脚本补齐响应收尾（长度重算 / 状态码），减少「改了但系统不用」\n- 诊断页按运行模式精简",
-  "notesEn": "- Honest verdict: a rewrite alone shows \"Rewritten\" instead of \"Active\"; turns green only after readback confirms\n- Fixed: stopping spoofing then reopening the app could silently re-enable it\n- Fixed: cold start with lost module coordinates could never restore them\n- Module hostnames trimmed 14 to 5; re-import the module to pick it up\n- Rewrite script now sets response length and status properly\n- Diagnostics page trimmed per mode"
+  "notes": "- 修复「已改写」被误判回「验证中」，诊断结论更稳\n- 修复主动停止后再打开 App 会被自动开启的残留路径\n- 修复冷启动时模块坐标丢失后补不回来\n- 诊断页在第三方模式下自动刷新，不再空着\n- 收藏页行高对齐新版系统，列表不再挤成一团\n- 旧系统页面圆角抬到 26pt，接近 iOS 26 观感\n- 图层胶囊收窄到与浮标同宽；三颗浮标可点范围扩大约 78%",
+  "notesEn": "- Fixed: a confirmed rewrite could be pushed back to verifying\n- Fixed: stopping spoofing then reopening the app could re-enable it\n- Fixed: cold start with lost module coordinates could never restore them\n- Diagnostics now auto-refreshes in third-party mode instead of staying empty\n- Favorites rows now match newer iOS height, no more cramped list\n- Sheet corner radius raised to 26pt on older iOS\n- Layer capsule narrowed to button width; floating buttons hit area +78%"
 }
