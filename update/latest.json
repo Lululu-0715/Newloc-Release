@@ -1,10 +1,10 @@
 {
   "version": "1.7.0",
-  "build": 78,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b78/update/NewlocUltimate-1.7.0-b78.bin",
-  "size": 4337105,
-  "sha256": "cb027d56494e85809d20a0a2f73ef0a32f36e08c0172f5347a4382b91f6c55df",
-  "date": "2026-10-23",
-  "notes": "- 移动模拟：静止/5米/10米/20米可选，减少原地不动被判异常的概率\n- 定位诊断面板：一键看出缓存、模块、坐标三者状态\n- 前台看护：回到前台 60 秒内自动补写坐标\n- 收藏页支持直接选中并应用\n- 第三方模块导入地址修复：改指发布仓不可变标签，解决死链导致的「模块不工作」\n- gzip 解压兜底：部分网络下响应被压缩时不再解析失败\n- 新增快捷指令：用 Siri 一键应用收藏地点",
-  "notesEn": "- Motion simulation (still/5m/10m/20m)\n- Location diagnostic panel\n- Foreground watchdog: re-applies coordinates within 60s\n- Apply favorites directly\n- Fixed third-party module dead links (immutable tag)\n- gzip fallback for compressed responses\n- App Intents: apply a favorite via Siri"
+  "build": 82,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b82/update/NewlocUltimate-1.7.0-b82.bin",
+  "size": 4343829,
+  "sha256": "8bfbef09c710ba235af1d26ce62508b5bd38156680390be6133ed35d37c7daa9",
+  "date": "2026-10-24",
+  "notes": "- 判定更诚实：改写落地不再直接报「已生效」，改为「已改写」，回读确认后才变绿\n- 修复「主动停止后再打开 App 会被自动重开」\n- 修复「冷启动时模块坐标丢了永远补不回来」\n- 模块域名精简 14 → 5，导入地址改为新标签（需重新导入模块）\n- 改写脚本补齐响应收尾（长度重算 / 状态码），减少「改了但系统不用」\n- 诊断页按运行模式精简",
+  "notesEn": "- Honest verdict: a rewrite alone shows \"Rewritten\" instead of \"Active\"; turns green only after readback confirms\n- Fixed: stopping spoofing then reopening the app could silently re-enable it\n- Fixed: cold start with lost module coordinates could never restore them\n- Module hostnames trimmed 14 to 5; re-import the module to pick it up\n- Rewrite script now sets response length and status properly\n- Diagnostics page trimmed per mode"
 }
