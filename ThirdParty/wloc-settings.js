@@ -34,6 +34,22 @@ const TAG = '[WLOC-SETTINGS]';
 const SETTINGS_KEY = 'wloc_settings';
 
 /**
+ * 模块版本，随脚本一起下发，并在每次应答里回给 App。
+ *
+ * **为什么需要它**：模块是用户自己在客户端里导入的，装哪一版 App 完全不知道 ——
+ * 脚本 404、外壳过期、缓存到旧版，从外面看都是「模块连上了但定位不动」。
+ * 以前只能靠 App 版本去猜。有了这个字段，App 能把「你装的是 9 月那份，
+ * 最新是 11 月那份」直接写在连接设置页上。
+ *
+ * 改这个值必须同时：
+ *   1. 在发布仓打新标签（`mod-<同值>`）；
+ *   2. 改 `ThirdPartyConfig.moduleTag`；
+ *   3. 改 5 个模块外壳里 script-path 的 `@mod-...`。
+ * 三者不同步就会出现「App 说旧、其实已经是最新」这种自相矛盾。
+ */
+const MODULE_VERSION = '2026.11.01';
+
+/**
  * 运行诊断键名，由 `wloc.js` 写入。
  *
  * 第三方模式下「规则装没装上」「脚本跑到哪一步」原本只能看客户端自己的
@@ -224,7 +240,7 @@ function handleQuery() {
     // 用 success:false 表示「模块在，但虚拟定位没开」，
     // 应用侧据此区分「模块未生效」和「模块已连接但未开启」。
     // 诊断信息照样带上：用户没开虚拟定位时，也要能看出模块到底跑没跑。
-    respond({ success: false, error: '无已保存的坐标', diag });
+    respond({ success: false, error: '无已保存的坐标', diag, moduleVersion: MODULE_VERSION });
     return;
   }
 
@@ -235,6 +251,7 @@ function handleQuery() {
     accuracy: Number(settings.accuracy) || 25,
     driftRadius: normalizeDrift(settings.driftRadius),
     diag,
+    moduleVersion: MODULE_VERSION,
   });
 }
 
@@ -292,6 +309,7 @@ function handleSave(query) {
     latitude,
     accuracy,
     driftRadius,
+    moduleVersion: MODULE_VERSION,
   });
 }
 
@@ -311,7 +329,7 @@ function main() {
   } else if (query.lon !== undefined && query.lat !== undefined) {
     handleSave(query);
   } else {
-    respond({ success: false, error: '缺少必要参数' });
+    respond({ success: false, error: '缺少必要参数', moduleVersion: MODULE_VERSION });
   }
 }
 
