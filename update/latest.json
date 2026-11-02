@@ -1,10 +1,10 @@
 {
   "version": "1.7.0",
-  "build": 91,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b91/update/NewlocUltimate-1.7.0-b91.bin",
-  "size": 3760192,
-  "sha256": "1859f4373835dc0947af231e5ef133a79f6e4dce90f391f7f19f47fdf7711f26",
-  "date": "2026-11-02",
-  "notes": "- 新增：模块版本自检，脚本过旧会在连接设置页提示重新导入（需重导一次模块才会显示版本号）\n- 修复：连接设置页可能仍显示「模块已连接」，实际客户端已关闭；现在每次进入都重新检测\n- 修复：关闭虚拟定位后旧连接不释放，出现「关了还生效」\n- 修复：断网超过离线宽限期仍可继续使用；现在要求联网校验一次\n- 修复：把系统时间往回拨可以绕过离线期限\n- 修复：第三方模式下诊断页误报「根证书已信任」\n- 修复：下载更新后点取消，安装包仍会落盘",
-  "notesEn": "- New: module version check; an outdated script now prompts a re-import in Connection Settings (re-import once to see the version)\n- Fixed: Connection Settings could still say \"module connected\" after the client was closed; it now re-probes on every entry\n- Fixed: closing spoofing left old connections open, so it looked like it was still active\n- Fixed: the app stayed usable after the offline grace period; online verification is now required once\n- Fixed: moving the system clock backwards bypassed the offline limit\n- Fixed: Diagnostics wrongly reported \"root certificate trusted\" in third-party mode\n- Fixed: cancelling after a download still wrote the package to disk"
+  "build": 83,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b83/update/NewlocUltimate-1.7.0-b83.bin",
+  "size": 4356776,
+  "sha256": "0fd67e9d540375cd57df954635e7d26dc8e44dd48ecadb76dbbc072b82042b80",
+  "date": "2026-10-24",
+  "notes": "- 修复「已改写」被误判回「验证中」，诊断结论更稳\n- 修复主动停止后再打开 App 会被自动开启的残留路径\n- 修复冷启动时模块坐标丢失后补不回来\n- 诊断页在第三方模式下自动刷新，不再空着\n- 收藏页行高对齐新版系统，列表不再挤成一团\n- 旧系统页面圆角抬到 26pt，接近 iOS 26 观感\n- 图层胶囊收窄到与浮标同宽；三颗浮标可点范围扩大约 78%",
+  "notesEn": "- Fixed: a confirmed rewrite could be pushed back to verifying\n- Fixed: stopping spoofing then reopening the app could re-enable it\n- Fixed: cold start with lost module coordinates could never restore them\n- Diagnostics now auto-refreshes in third-party mode instead of staying empty\n- Favorites rows now match newer iOS height, no more cramped list\n- Sheet corner radius raised to 26pt on older iOS\n- Layer capsule narrowed to button width; floating buttons hit area +78%"
 }
