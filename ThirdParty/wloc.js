@@ -43,6 +43,23 @@ const SETTINGS_KEY = 'wloc_settings';
  */
 const DIAG_KEY = 'wloc_diag';
 
+/**
+ * 运行诊断**历史**键名（最近若干条，按时间正序）。
+ *
+ * 为什么单条 `wloc_diag` 不够：它只保留最后一次。排查「用着用着跳回真实
+ * 位置」时，单条记录无法回答最关键的问题 —— **最后一次改写之后，还有没有
+ * 新的 /clls/wloc 进来**。如果摘要里的时间戳停在几分钟前，而系统手里已经有
+ * 真实位置，就说明后续查询根本没被脚本看到（走了 UDP/QUIC、换了主机名，
+ * 或被规则判了直连），而不是「改了但系统不认」。
+ *
+ * 有了历史，一次复现就能看出这轮查询经历了什么、断在哪一步、断之前最后
+ * 一条是哪个主机名。
+ */
+const DIAG_LOG_KEY = 'wloc_diag_log';
+
+/** 历史保留条数。8 条足够覆盖一次「开启 → 跳回真实」的全过程，体积约 1.5KB。 */
+const DIAG_LOG_LIMIT = 8;
+
 // ---------------------------------------------------------------------------
 // 存储读写
 // ---------------------------------------------------------------------------
@@ -146,6 +163,54 @@ function readSettings() {
  *
  * 写诊断本身失败不影响改写，所以整体包在 try 里。
  */
+/**
+ * 取这次请求的主机名与路径。
+ *
+ * 排查「跳回真实位置」时，主机名是最关键的一项：同一个 `/clls/wloc` 路径，
+ * 可能来自 `gs-loc`、`gs-loc-cn`、`gsp-ssl`，也可能来自名单之外的编号入口。
+ * 只有记下来，才能回答「断之前最后一次是谁」「有没有新面孔进来」。
+ *
+ * `$request` 在部分客户端的 http-response 脚本里不存在，取不到就算了，
+ * 绝不能因为拿不到请求信息而影响改写本身。
+ */
+function requestEndpoint() {
+  try {
+    const url = (typeof $request !== 'undefined' && $request && $request.url)
+      ? String($request.url)
+      : '';
+    if (!url) return null;
+    const match = url.match(/^[a-z][a-z0-9+.-]*:\/\/([^/?#]+)([^?#]*)/i);
+    if (!match) return null;
+    return {
+      host: match[1].toLowerCase(),
+      path: match[2] || '/',
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+/** 把一条诊断追加进历史，只保留最近 `DIAG_LOG_LIMIT` 条。 */
+function appendDiagLog(record) {
+  try {
+    const raw = readRawKey(DIAG_LOG_KEY);
+    let list = [];
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) list = parsed;
+      } catch (error) {
+        list = [];
+      }
+    }
+    list.push(record);
+    while (list.length > DIAG_LOG_LIMIT) list.shift();
+    writeRawKey(DIAG_LOG_KEY, JSON.stringify(list));
+  } catch (error) {
+    log(`诊断历史写入失败: ${error}`);
+  }
+}
+
 function recordDiag(outcome, extra) {
   try {
     const record = {
@@ -153,12 +218,20 @@ function recordDiag(outcome, extra) {
       ts: Date.now(),
       env: ENV,
     };
+
+    const endpoint = requestEndpoint();
+    if (endpoint) {
+      record.host = endpoint.host;
+      record.path = endpoint.path;
+    }
+
     for (const key in extra) {
       if (Object.prototype.hasOwnProperty.call(extra, key)) {
         record[key] = extra[key];
       }
     }
     writeRawKey(DIAG_KEY, JSON.stringify(record));
+    appendDiagLog(record);
   } catch (error) {
     log(`诊断写入失败: ${error}`);
   }
@@ -696,6 +769,9 @@ const DIST_EXTRA = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
 /** 动态块里「码长码」的传输顺序（RFC 1951 §3.2.7）。 */
 const CODE_LENGTH_ORDER = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
 
+/** 单次解压允许产出的最大字节数（4 MB）。见 `inflateRawBytes` 里的说明。 */
+const MAX_INFLATE_BYTES = 4 * 1024 * 1024;
+
 /** 解一个 gzip 容器，返回解压后的字节数组；失败返回 null。 */
 function inflateGzipBytes(bytes) {
   if (!isGzip(bytes) || bytes.length < 18) return null;
@@ -780,6 +856,17 @@ function inflateRawBytes(bytes, start) {
   let bitPos = start * 8;
   const out = [];
 
+  // 解压输出的体积上限（2026-11-01 加）。
+  //
+  // 定位响应正常只有几十 KB，这条线离正常值有两个数量级，不会被误伤。
+  // 加它的原因：这个解压器跑在客户端的 JS 运行时里（Shadowrocket /
+  // Quantumult X），没有内存配额保护 —— 一份被篡改的响应就是一发压缩炸弹，
+  // 撑爆的后果是整个脚本进程被杀、连接被重置，用户只看到「网断了」。
+  // 超限就抛错，由 `inflateGzipBytes` 兜住返回 null，走「放行原包」那条路。
+  function guardSize() {
+    if (out.length > MAX_INFLATE_BYTES) throw new Error('解压后体积超过上限');
+  }
+
   function readBit() {
     const index = bitPos >> 3;
     if (index >= bytes.length) throw new Error('数据提前结束');
@@ -820,6 +907,7 @@ function inflateRawBytes(bytes, start) {
       if ((length ^ 0xffff) !== inverse) throw new Error('存储块长度校验失败');
       bitPos = (index + 4) * 8;
       for (let i = 0; i < length; i += 1) out.push(readBits(8));
+      guardSize();
 
     } else if (type === 1 || type === 2) {
       let litTable;
@@ -864,6 +952,9 @@ function inflateRawBytes(bytes, start) {
       }
 
       for (;;) {
+        // 每解一个符号查一次体积：单个往返最多涨 258 字节（长度码上限），
+        // 4MB 的线上不会因为「查得太稀」被穿过去。
+        guardSize();
         const symbol = decodeSymbol(litTable);
         if (symbol < 256) { out.push(symbol); continue; }
         if (symbol === 256) break;
