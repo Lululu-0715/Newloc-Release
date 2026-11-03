@@ -46,7 +46,7 @@ Quantumult X 的语法），小火箭读不懂，导入后模块完全不生效�
 
 | 客户端 | 导入地址 |
 |---|---|
-| Shadowrocket | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.module` |
+| Shadowrocket | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.05/ThirdParty/modules/wloc.module` |
 | Surge | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.sgmodule` |
 | Egern | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.sgmodule` |
 | Quantumult X | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.conf` |
