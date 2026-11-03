@@ -32,11 +32,11 @@
 # 出来的字节流已经坏了——表现就是「模块在跑、坐标也写进去了，定位纹丝不动」。
 #
 # max-size=0 表示不限制，避免响应稍大就静默跳过。
-wloc-rewrite = type=http-response,pattern=^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp-ssl\.ls\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc,requires-body=1,binary-body-mode=1,max-size=0,timeout=30,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.05/ThirdParty/wloc.js
+wloc-rewrite = type=http-response,pattern=^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp(?:10|64)?-ssl\.ls\.apple\.com|gsp10-ssl\.apple\.com|gspe(?:1|19|19-2|35|79|85)-ssl\.ls\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc,requires-body=1,binary-body-mode=1,max-size=0,timeout=30,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.06/ThirdParty/wloc.js
 
 # 配置接口：应用通过这个请求把目标坐标写进客户端存储。
 # 这个请求不真的出网，由脚本直接回一个 JSON，所以要给足 timeout。
-wloc-settings = type=http-request,pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save,requires-body=0,max-size=0,timeout=10,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.05/ThirdParty/wloc-settings.js
+wloc-settings = type=http-request,pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save,requires-body=0,max-size=0,timeout=10,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.06/ThirdParty/wloc-settings.js
 
 [Rule]
 # ── 屏蔽 Apple 定位链路上的 QUIC（HTTP/3，UDP/443） ──────────────
@@ -54,7 +54,16 @@ AND,((PROTOCOL,UDP),(DEST-PORT,443)),REJECT
 [MITM]
 # %APPEND% 保证不覆盖用户已有的 MITM 配置。
 #
+# 这 14 台不是随便凑的：前两台是 Apple 全球 / 国内定位入口；
+# gsp / gspe 那批是新系统把定位查询分散过去的备用入口（实测 iOS 27
+# 的日志里会出现系统直连 gspe79-ssl.ls.apple.com:443、且因为没有
+# MITM 而完全绕过脚本的情况）；最后两台是 Apple 地图在国内使用的
+# 蓝点定位（高德）端点。
+#
+# 刻意逐条枚举而不用 *.ls.apple.com 通配：通配会把 Apple ID、推送、
+# 软件更新等大量无关流量也拉进中间人，既没必要也不安全。
+#
 # 重要：这些主机名必须经过 MITM 才能被拦截。
 # 绝不要给它们加 DOMAIN,...,DIRECT 规则——那会让流量绕过代理，
 # 改写规则看起来装好了却永远不会触发。
-hostname = %APPEND% gs-loc.apple.com, gs-loc-cn.apple.com, gsp-ssl.ls.apple.com, bluedot.is.autonavi.com, bluedot.is.autonavi.com.gds.alibabadns.com
+hostname = %APPEND% gs-loc.apple.com, gs-loc-cn.apple.com, gsp-ssl.ls.apple.com, gsp10-ssl.ls.apple.com, gsp10-ssl.apple.com, gsp64-ssl.ls.apple.com, gspe1-ssl.ls.apple.com, gspe19-ssl.ls.apple.com, gspe19-2-ssl.ls.apple.com, gspe35-ssl.ls.apple.com, gspe79-ssl.ls.apple.com, gspe85-ssl.ls.apple.com, bluedot.is.autonavi.com, bluedot.is.autonavi.com.gds.alibabadns.com
