@@ -46,12 +46,12 @@ Quantumult X 的语法），小火箭读不懂，导入后模块完全不生效�
 
 | 客户端 | 导入地址 |
 |---|---|
-| Shadowrocket | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.module` |
-| Surge | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.sgmodule` |
-| Egern | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.sgmodule` |
-| Quantumult X | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.conf` |
-| Loon | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.lpx` |
-| Stash | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.10.23/ThirdParty/modules/wloc.stoverride` |
+| Shadowrocket | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.module` |
+| Surge | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.sgmodule` |
+| Egern | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.sgmodule` |
+| Quantumult X | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.conf` |
+| Loon | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.lpx` |
+| Stash | `https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/modules/wloc.stoverride` |
 
 直接在客户端里搜文件名是搜不到的，**要粘完整地址**。
 
@@ -68,29 +68,30 @@ Quantumult X 的语法），小火箭读不懂，导入后模块完全不生效�
 ## 导入之后必须做两件事
 
 1. **开启模块**（导入完默认可能是关闭状态）；
-2. **开启 MITM**，并确认下面这 14 个主机名已加进 MITM 名单：
+2. **开启 MITM**，并确认下面这 5 个主机名已加进 MITM 名单：
 
 ```
 gs-loc.apple.com
 gs-loc-cn.apple.com
 gsp-ssl.ls.apple.com
-gsp10-ssl.ls.apple.com
-gsp10-ssl.apple.com
-gsp64-ssl.ls.apple.com
-gspe1-ssl.ls.apple.com
-gspe19-ssl.ls.apple.com
-gspe19-2-ssl.ls.apple.com
-gspe35-ssl.ls.apple.com
-gspe79-ssl.ls.apple.com
-gspe85-ssl.ls.apple.com
 bluedot.is.autonavi.com
 bluedot.is.autonavi.com.gds.alibabadns.com
 ```
 
-前两台是 Apple 的全球 / 国内定位入口，中间那批 `gsp*` / `gspe*` 是
-**新版本系统把定位查询分散过去的备用入口**。只拦前两三台的话，在 iOS 26+
-上会表现成「模块装了、MITM 也开了，定位就是纹丝不动」。最后两台是
-Apple 地图在国内使用的蓝点定位（高德）端点。
+前两台是 Apple 的全球 / 国内定位入口，`gsp-ssl.ls.apple.com` 是定位请求
+真正落地的那台接入机（会解析到 `gspx-ssl` → `aaplimg`）。最后两台是
+Apple 地图在国内使用的蓝点定位（高德）端点 —— `gs-loc.apple.com` 在国内
+本来就会 CNAME 到 `bluedot.is.autonavi.com.gds.alibabadns.com`（实测
+解析到 `140.205.31.96`），所以必须一起拦。
+
+> **为什么不再列 `gsp10-*` / `gspe*` 那一批**（2026-10-24 收窄）
+>
+> 那些名字是 Apple CDN 的**边缘节点**，只在 DNS 的 CNAME 链上出现，
+> 不会出现在 TLS 握手的 SNI 里 —— 例如
+> `gspe19-ssl.ls.apple.com → gspe19-ssl.ls.apple.com.edgekey.net →
+> e10499.dsce9.akamaiedge.net`（Akamai）。中间人判定看的是 SNI，
+> 把 CNAME 目标写进 hostname 名单等于写了一个永远匹配不到的名字。
+> 名单里多一台就多签一张证书、多一次握手风险，对命中率没有任何帮助。
 
 `wloc.module`（Shadowrocket）、`wloc.sgmodule`（Surge / Egern）两个文件的
 `hostname` 用的是 `%APPEND%` 前缀，导入时会**追加**到你的 MITM 名单，
