@@ -32,11 +32,24 @@
 # 出来的字节流已经坏了——表现就是「模块在跑、坐标也写进去了，定位纹丝不动」。
 #
 # max-size=0 表示不限制，避免响应稍大就静默跳过。
-wloc-rewrite = type=http-response,pattern=^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp-ssl\.ls\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc,requires-body=1,binary-body-mode=1,max-size=0,timeout=30,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/wloc.js
+wloc-rewrite = type=http-response,pattern=^https?:\/\/(?:gs-loc(?:-cn)?\.apple\.com|gsp-ssl\.ls\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc,requires-body=1,binary-body-mode=1,max-size=0,timeout=30,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.05/ThirdParty/wloc.js
 
 # 配置接口：应用通过这个请求把目标坐标写进客户端存储。
 # 这个请求不真的出网，由脚本直接回一个 JSON，所以要给足 timeout。
-wloc-settings = type=http-request,pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save,requires-body=0,max-size=0,timeout=10,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.04/ThirdParty/wloc-settings.js
+wloc-settings = type=http-request,pattern=^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save,requires-body=0,max-size=0,timeout=10,script-path=https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@mod-2026.11.05/ThirdParty/wloc-settings.js
+
+[Rule]
+# ── 屏蔽 Apple 定位链路上的 QUIC（HTTP/3，UDP/443） ──────────────
+# QUIC 走 UDP，既不能被 MITM 解密，也不会触发 http-response 脚本。
+# 一旦定位请求命中 QUIC，响应就是「原样放行」——表现正是
+# 「模块在跑、日志有记录，但定位隔几分钟又跳回真实位置」。
+# 这里直接拒绝全部 UDP/443，逼客户端回落 HTTP/2 over TCP，
+# 保证每一条 /clls/wloc 都经过脚本。
+#
+# 说明：本规则覆盖本机所有 UDP/443，不止 Apple 域名。
+# 之所以不用 DOMAIN-SUFFIX 限定，是因为 UDP 没有域名概念，
+# 只靠 DNS 映射匹配，换网络/换 DNS 就漏。
+AND,((PROTOCOL,UDP),(DEST-PORT,443)),REJECT
 
 [MITM]
 # %APPEND% 保证不覆盖用户已有的 MITM 配置。
