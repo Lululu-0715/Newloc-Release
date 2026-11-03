@@ -1,10 +1,10 @@
 {
   "version": "1.7.0",
-  "build": 92,
-  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b92/update/NewlocUltimate-1.7.0-b92.bin",
-  "size": 3765709,
-  "sha256": "93a601b818ea9efef19e81a9d231bea3b1e5b5d1ea6a40eaa2b45d4d26f72a8b",
+  "build": 93,
+  "url": "https://cdn.jsdelivr.net/gh/Lululu-0715/Newloc-Release@v1.7.0-b93/update/NewlocUltimate-1.7.0-b93.bin",
+  "size": 3776002,
+  "sha256": "d1e69dcf8f26af35556f2987cdfdb8ca3754c65dcd1bdd12ea69ca5828f30ae7",
   "date": "2026-11-03",
-  "notes": "- 修复：模块已是最新（2026.11.07）却仍提示「建议重导」，而重导地址指向旧版，照着做反而降级；现在按版本号大小判断，不再误报",
-  "notesEn": "- Fixed: the app still showed \"re-import suggested\" even with the newest module (2026.11.07), and the re-import link pointed at an older tag, so following it downgraded the module; the version check now compares numerically"
+  "notes": "- 新增：连接设置页显示「最近改写记录」，最近 8 条改写的时间 / 结果 / 命中条数 / 主机名，查「用着用着跳回真实位置」不用再开网页\n- 修复：模块已是最新却仍提示「建议重导」，重导地址还指向旧版导致越导越旧",
+  "notesEn": "- New: the connection settings page now lists the last 8 rewrite records (time, outcome, hit count, host), so \"location jumps back\" can be diagnosed without opening the web page\n- Fixed: the app still suggested re-importing even with the newest module, and the link pointed at an older tag so following it downgraded the module"
 }
