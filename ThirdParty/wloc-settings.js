@@ -47,7 +47,7 @@ const SETTINGS_KEY = 'wloc_settings';
  *   3. 改 5 个模块外壳里 script-path 的 `@mod-...`。
  * 三者不同步就会出现「App 说旧、其实已经是最新」这种自相矛盾。
  */
-const MODULE_VERSION = '2026.11.04';
+const MODULE_VERSION = '2026.11.06';
 
 /**
  * 运行诊断键名，由 `wloc.js` 写入。
