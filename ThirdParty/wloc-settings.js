@@ -47,7 +47,7 @@ const SETTINGS_KEY = 'wloc_settings';
  *   3. 改 5 个模块外壳里 script-path 的 `@mod-...`。
  * 三者不同步就会出现「App 说旧、其实已经是最新」这种自相矛盾。
  */
-const MODULE_VERSION = '2026.11.01';
+const MODULE_VERSION = '2026.11.04';
 
 /**
  * 运行诊断键名，由 `wloc.js` 写入。
@@ -57,6 +57,15 @@ const MODULE_VERSION = '2026.11.01';
  * 能直接显示「模块运行情况」，不用再靠猜。
  */
 const DIAG_KEY = 'wloc_diag';
+
+/**
+ * 运行诊断**历史**键名，由 `wloc.js` 写入（最近若干条）。
+ *
+ * 单条诊断回答不了「最后一次改写之后还有没有新请求进来」—— 而这正是
+ * 「用着用着跳回真实位置」的分水岭。这里把历史一并带回去，用户点开
+ * 那串查询 JSON 就能看到整轮过程。
+ */
+const DIAG_LOG_KEY = 'wloc_diag_log';
 
 // ---------------------------------------------------------------------------
 // 存储读写
@@ -107,6 +116,18 @@ function readDiag() {
     return parsed && typeof parsed === 'object' ? parsed : null;
   } catch (error) {
     return null;
+  }
+}
+
+/** 读最近若干条诊断。缺失或坏数据一律返回空数组，不能让查询整条失败。 */
+function readDiagLog() {
+  const raw = readRawKey(DIAG_LOG_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
   }
 }
 
@@ -235,12 +256,19 @@ function normalizeDrift(value) {
 function handleQuery() {
   const settings = readSettings();
   const diag = readDiag();
+  const diagLog = readDiagLog();
 
   if (!settings || settings.enabled !== true) {
     // 用 success:false 表示「模块在，但虚拟定位没开」，
     // 应用侧据此区分「模块未生效」和「模块已连接但未开启」。
     // 诊断信息照样带上：用户没开虚拟定位时，也要能看出模块到底跑没跑。
-    respond({ success: false, error: '无已保存的坐标', diag, moduleVersion: MODULE_VERSION });
+    respond({
+      success: false,
+      error: '无已保存的坐标',
+      diag,
+      diagLog,
+      moduleVersion: MODULE_VERSION,
+    });
     return;
   }
 
@@ -251,6 +279,7 @@ function handleQuery() {
     accuracy: Number(settings.accuracy) || 25,
     driftRadius: normalizeDrift(settings.driftRadius),
     diag,
+    diagLog,
     moduleVersion: MODULE_VERSION,
   });
 }
