@@ -1090,3 +1090,30 @@ test('内置解压：截断的 gzip 只放行，不许把异常抛出去', () =>
 
   assertPassthrough(result);
 });
+
+test('内置解压：超过 4MB 的压缩炸弹必须被挡住，只放行', () => {
+  // 8 MB 的全零数据，gzip 后只有十几 KB —— 典型的压缩炸弹形态。
+  // 这个解压器跑在客户端的 JS 运行时里，没有内存配额：不加上限的话，
+  // 一份被篡改的响应就能把脚本进程撑爆（用户看到的是「网断了」）。
+  const bomb = gzipSync(Buffer.alloc(8 * 1024 * 1024, 0));
+
+  const sandbox = loadSandbox(WLOC_SOURCE, {
+    $persistentStore: { read: () => null },
+  });
+  assert.strictEqual(sandbox.inflateGzipBytes(Array.from(bomb)), null,
+    '超限必须解成 null，而不是继续往数组里堆');
+
+  const result = runScript(WLOC_SOURCE, {
+    $response: {
+      body: bomb.toString('latin1'),
+      headers: { 'Content-Encoding': 'gzip' },
+    },
+    $persistentStore: {
+      read: () => JSON.stringify({
+        enabled: true, latitude: 22.281508, longitude: 114.1747, accuracy: 30,
+      }),
+    },
+  });
+
+  assertPassthrough(result);
+});
